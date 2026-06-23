@@ -5,7 +5,11 @@ import java.util.Scanner;
 import src.const_enum.*;
 import src.lib.CommandUtilObject;
 import src.lib.REPLUtils;
+import src.lib.ParserException;
 // name this files package ?
+
+
+import src.engine.QueryEngine;
 
 
 
@@ -52,6 +56,7 @@ private static void replServer() {
         // grab user input into cli
         
         String line = scanner.nextLine().trim();
+        cmdObject.fullCommandLine = line; // update new line to current cmdObject
         // if no user input, continue
         if (line.isEmpty()) continue;
 
@@ -65,10 +70,20 @@ private static void replServer() {
         // String command = parts[userInputIndex].toLowerCase();
 
         // Commands cmd = Commands.fromString(command); // throws if invalid
-        
-        REPLUtils.parseCommand(parts, cmdObject);
 
-        switch (cmdObject.command) {
+        try {
+
+            REPLUtils.parseCommand(parts, cmdObject);
+
+            // parse base structure of command here so our switch can directly point to a case
+            // use database
+            // create database
+            // create table
+            // select from <table>
+
+            System.out.println(line);
+
+            switch (cmdObject.command) {
                 case CREATE -> {
                     System.out.println("create command issued.");
                     // userInputIndex++;
@@ -81,23 +96,28 @@ private static void replServer() {
                         REPLUtils.errorLog(line, cmdObject.errorMessage);
                         break;
                     }
-                    System.out.println(cmdObject.command);
-                    System.out.println(cmdObject.commandLineIndex);
+                    // System.out.println(cmdObject.command);
+                    // System.out.println(cmdObject.commandLineIndex);
                     
 
                     // databse as secondary command,
                     // Create a database... 
                     if(cmdObject.command == Commands.DATABASE){
+                        
+                        // create database
+                        // send to create database query engine
+                        QueryEngine.createDatabase(parts,cmdObject);
+                        
                         // userInputIndex++;
                         //String databaseName = parts[2].toLowerCase();
                         REPLUtils.parseCommandArguments(parts, cmdObject);
                         // userInputIndex = cmdObject.commandLineIndex;
-                        if(cmdObject.errorFlag){
-                            REPLUtils.errorLog(line, cmdObject.errorMessage);
-                            break;
-                        }
+                        // if(cmdObject.errorFlag){
+                        //     REPLUtils.errorLog(line, cmdObject.errorMessage);
+                        //     break;
+                        // }
                         System.out.println("create database command issued...");
-                        System.out.println(cmdObject.stringContent);
+                        // System.out.println(cmdObject.stringContent);
 
                     }
                     else if(cmdObject.command == Commands.TABLE){
@@ -127,6 +147,15 @@ private static void replServer() {
                 }
                 default -> REPLUtils.errorLog(line,cmdObject.errorMessage);
             }
+
+        // catch any thrown errors
+        } catch (ParserException  e) {
+            REPLUtils.errorLog(line,e.getMessage());
+            //System.out.println("Error: " + e.getMessage());
+        }
+
+        
+        
     }
 
 }

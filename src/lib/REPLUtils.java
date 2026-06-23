@@ -2,6 +2,7 @@ package src.lib;
 
 import src.const_enum.*;
 import src.lib.CommandUtilObject;
+import src.lib.ParserException;
 
 public final class REPLUtils {
     
@@ -14,7 +15,8 @@ public final class REPLUtils {
         if(cmdObject.commandLineIndex >= commandParts.length){
             cmdObject.errorFlag = true;
             cmdObject.errorMessage = "Missing necessary arguments.";
-            return;
+            throw new ParserException("Missing neccessary arguments.");
+            // return;
         }
         String commandArg = commandParts[cmdObject.commandLineIndex].toLowerCase();
         Commands cmdArg = Commands.fromString(commandArg);
@@ -24,11 +26,13 @@ public final class REPLUtils {
         return;
     }
 
+    // Method to grab non sql based command keywords such as table_name, database_name, etc..
     public static void parseCommandArguments(String[] commandParts, CommandUtilObject cmdObject){
         if(cmdObject.commandLineIndex >= commandParts.length){
             cmdObject.errorFlag = true;
             cmdObject.errorMessage = "Missing necessary arguments.";
-            return;
+            throw new ParserException("Missing neccessary arguments.");
+            // return;
         }
         String databaseName = commandParts[cmdObject.commandLineIndex].toLowerCase();
         cmdObject.stringContent = databaseName;

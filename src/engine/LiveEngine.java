@@ -2,12 +2,18 @@ package src.engine;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
 import src.const_enum.*;
+import src.model.Database;
 
 public class LiveEngine {
 
-    // private Database currentDatabase;
-    private String currentDatabaseName;
+    private Map<String, Database> databases = new HashMap<>(); // keep record of current databases in memory
+
+    private Database currentDatabase; // current database in use
+    //private String currentDatabaseName;
     private Path currentDatabasePath;
 
     // class level consts
@@ -18,12 +24,15 @@ public class LiveEngine {
     // GETTERS / SETTERS
     //
     // current database name GET and SET
-    public String getCurrentDatabaseName(){
-        return currentDatabaseName;
+    public Database getCurrentDatabase(){
+        return currentDatabase;
     }
-    public void setCurrentDatabaseName(String databaseName){
-        this.currentDatabaseName = databaseName;
+    public void setCurrentDatabase(String databaseName){
+        Database db = databases.get(databaseName);
+        if(db == null) throw new RuntimeException("Database does not exist: " + databaseName);
+        this.currentDatabase = db;
     }
+    
     // ---
     public Path getCurrentDatabasePath(){
         return currentDatabasePath;
