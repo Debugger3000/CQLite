@@ -7,8 +7,7 @@ import src.lib.CommandUtilObject;
 import src.lib.REPLUtils;
 import src.lib.ParserException;
 // name this files package ?
-
-
+import src.engine.LiveEngine;
 import src.engine.QueryEngine;
 
 
@@ -22,6 +21,8 @@ import src.engine.QueryEngine;
  * 
  * 
  */
+
+// & 'C:\Users\mccau\AppData\Local\Programs\Eclipse Adoptium\jdk-25.0.3.9-hotspot\bin\java.exe' '-XX:+ShowCodeDetailsInExceptionMessages' '-cp' 'C:\Users\mccau\AppData\Roaming\Code\User\workspaceStorage\536fbf6473d73d03a5582eecbb2d5c8c\redhat.java\jdt_ws\CQLBase_a03098a7\bin' 'src.Main'
 
 
 
@@ -38,13 +39,18 @@ public static void main(String[] args) {
     // interaction layer with database
     // 
 
+    // load .db file or run queries against .db file with cli...
+
+    // when to update .db file ? after each query we update in memory java models ?
+    LiveEngine liveEngine = new LiveEngine();
+
     // run server and begin REPL Loop
-    replServer();
+    replServer(liveEngine);
     
 }
 
 // Main CLI loop function...
-private static void replServer() {
+private static void replServer(LiveEngine liveEngine) {
 
     Scanner scanner = new java.util.Scanner(System.in);
     System.out.println("Welcome to CQLite !");
@@ -59,6 +65,9 @@ private static void replServer() {
         cmdObject.fullCommandLine = line; // update new line to current cmdObject
         // if no user input, continue
         if (line.isEmpty()) continue;
+        else{
+            cmdObject.commandLineIndex = 0;
+        }
 
         // line input exists so we create a index for grabbing keywords
         //int userInputIndex = 0;
@@ -92,10 +101,10 @@ private static void replServer() {
                     // Commands cmdArg = Commands.fromString(commandArg);
                     REPLUtils.parseCommand(parts, cmdObject);
                     // userInputIndex = cmdObject.commandLineIndex;
-                    if(cmdObject.errorFlag){
-                        REPLUtils.errorLog(line, cmdObject.errorMessage);
-                        break;
-                    }
+                    // if(cmdObject.errorFlag){
+                    //     REPLUtils.errorLog(line, cmdObject.errorMessage);
+                    //     break;
+                    // }
                     // System.out.println(cmdObject.command);
                     // System.out.println(cmdObject.commandLineIndex);
                     
@@ -103,20 +112,20 @@ private static void replServer() {
                     // databse as secondary command,
                     // Create a database... 
                     if(cmdObject.command == Commands.DATABASE){
-                        
+                        System.out.println("create database command issued...");
                         // create database
                         // send to create database query engine
-                        QueryEngine.createDatabase(parts,cmdObject);
+                        QueryEngine.createDatabase(parts,cmdObject, liveEngine);
                         
                         // userInputIndex++;
                         //String databaseName = parts[2].toLowerCase();
-                        REPLUtils.parseCommandArguments(parts, cmdObject);
+                        // REPLUtils.parseCommandArguments(parts, cmdObject);
                         // userInputIndex = cmdObject.commandLineIndex;
                         // if(cmdObject.errorFlag){
                         //     REPLUtils.errorLog(line, cmdObject.errorMessage);
                         //     break;
                         // }
-                        System.out.println("create database command issued...");
+                        
                         // System.out.println(cmdObject.stringContent);
 
                     }
@@ -137,6 +146,11 @@ private static void replServer() {
                 }
                 case USE -> {
                     System.out.println("use command issued.");
+
+                    QueryEngine.useDatabase(parts, cmdObject, liveEngine);
+
+
+
                     break; // break loop
                     
                 }

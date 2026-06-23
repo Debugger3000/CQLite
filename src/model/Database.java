@@ -20,4 +20,20 @@ public class Database {
         return name;
     }
 
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Database: ").append(name).append("\n");
+        sb.append("Tables:");
+
+        if (tables.isEmpty()) {
+            sb.append(" (none)");
+        } else {
+            for (String tableName : tables.keySet()) {
+                sb.append("\n  - ").append(tableName);
+            }
+        }
+        return sb.toString();
+    }
+
 }
