@@ -12,7 +12,7 @@ public final class REPLUtils {
 
     // 
     public static void parseCommand(String[] commandParts, CommandUtilObject cmdObject){
-        System.out.println("commandLineindex: " + cmdObject.commandLineIndex);
+        // System.out.println("commandLineindex: " + cmdObject.commandLineIndex);
         if(cmdObject.commandLineIndex >= commandParts.length){
             cmdObject.errorFlag = true;
             cmdObject.errorMessage = "parseCommand - Missing necessary arguments.";

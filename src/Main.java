@@ -53,16 +53,45 @@ public static void main(String[] args) {
 private static void replServer(LiveEngine liveEngine) {
 
     Scanner scanner = new java.util.Scanner(System.in);
+    StringBuilder buffer = new StringBuilder(); // to add cli input into
     System.out.println("Welcome to CQLite !");
+    String line = "";
 
     CommandUtilObject cmdObject = new CommandUtilObject();
 
     // interactive environment loop
     while(true) {
         // grab user input into cli
+        line = "";
+
+
+        // populate line as a String for a multi-line command
+        while (scanner.hasNextLine()) {
+            String scanLine = scanner.nextLine();
+            // String strippedScanLine = scanLine.replaceAll("\n", "");
+            // for (char c : scanLine.toCharArray()) {
+            //     System.out.print((int) c + " ");
+            // }
+            // System.out.println();
+            if (scanLine.isEmpty()) break; // is empty input we break this scanline loop...
+            buffer.append(scanLine).append(" "); // space prevents words from different lines merging
+
+
+            if (scanLine.trim().endsWith(";")) {
+                line = buffer.toString().replaceAll("\\s+", " ").trim();
+                cmdObject.fullCommandLine = line; // update new line to current cmdObject
+                // ---- process the complete query here ----
+                System.out.println("Got query: " + line);
+                // tokenize, execute, whatever you need to do with fullQuery
+
+                buffer.setLength(0); // reset for the next query
+                // System.out.print("sql> ");
+            }
+            // else: keep looping silently, still accumulating the paste
+        }
         
-        String line = scanner.nextLine().trim();
-        cmdObject.fullCommandLine = line; // update new line to current cmdObject
+        // String line = scanner.nextLine().trim();
+        
         // if no user input, continue
         if (line.isEmpty()) continue;
         else{
@@ -74,6 +103,7 @@ private static void replServer(LiveEngine liveEngine) {
 
         // break cli input into chunks by spaces
         String[] parts = line.split("\\s+", 3);
+        System.out.println("parts " + parts );
         // grab main command keyword which is first word
         // 'use', 'exit', 'select'
         // String command = parts[userInputIndex].toLowerCase();
@@ -131,6 +161,7 @@ private static void replServer(LiveEngine liveEngine) {
                     }
                     else if(cmdObject.command == Commands.TABLE){
                         // userInputIndex++;
+                        System.out.println("create table command issued...\n\n" + parts);
 
                     }
 
@@ -145,7 +176,7 @@ private static void replServer(LiveEngine liveEngine) {
                     
                 }
                 case USE -> {
-                    System.out.println("use command issued.");
+                    // System.out.println("use command issued.");
 
                     QueryEngine.useDatabase(parts, cmdObject, liveEngine);
 

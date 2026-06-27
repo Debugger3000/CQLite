@@ -36,12 +36,21 @@ public final class QueryEngine {
     public static void useDatabase(String[] parts, CommandUtilObject cmdObject, LiveEngine liveEngine) {
 
         REPLUtils.parseCommandArguments(parts, cmdObject);
+        // System.out.println("Within useDatabase QueryEngine: " + cmdObject.stringContent);
+
         String databaseName = cmdObject.stringContent;
 
         if(!liveEngine.needDatabaseExist(databaseName)){
             liveEngine.setCurrentDatabase(databaseName);
-
+            // System.out.println("Database exists");
         }
+
+    }
+
+    // Query handling
+    public static void createTable(String[] parts, CommandUtilObject cmdObject, LiveEngine liveEngine) {
+
+        // grab "(....) content from input parts" with Query parser
 
     }
     

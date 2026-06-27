@@ -43,7 +43,7 @@ public class LiveEngine {
         
             // throw new RuntimeException("Database does not exist: " + databaseName);
         this.currentDatabase = db;
-        System.out.println(currentDatabase); // print toString to show database info...
+        System.out.println("---CurrentDatabase---\n" + currentDatabase); // print toString to show database info...
     }
     
     // ---
@@ -72,13 +72,14 @@ public class LiveEngine {
 
     // if it does not exist, we need to throw error
     public boolean needDatabaseExist(String databaseName) {
+        System.out.println("Database name given to needDatabaseExist: " + databaseName);
         Database db = databases.get(databaseName);
         if(db != null) {
             return false;
         }
             // throw new RuntimeException("Database does not exist: " + databaseName);
         else{
-            throw new ParserException("Database does not exist." + databaseName); 
+            throw new ParserException("Database does not exist. " + databaseName); 
         }
     }
 
