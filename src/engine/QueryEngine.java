@@ -2,6 +2,7 @@ package src.engine;
 
 import src.lib.*;
 import src.model.Database;
+import src.parser.SQLParser;
 
 public final class QueryEngine {
 
@@ -47,8 +48,18 @@ public final class QueryEngine {
 
     }
 
+    // query specific functions can control their own parse stages
+    // Such that, each function expects a certain structure...
+
     // Query handling
     public static void createTable(String[] parts, CommandUtilObject cmdObject, LiveEngine liveEngine) {
+
+        // index should be on name now... we can grab that to use...
+        REPLUtils.parseCommandArguments(parts, cmdObject); // populate string name of database
+        String tableName = cmdObject.stringContent;
+
+        // parse ();
+        SQLParser.parseGrabBracketContent(cmdObject.fullCommandLine); // grab all bracket content possible
 
         // grab "(....) content from input parts" with Query parser
 

@@ -130,13 +130,6 @@ private static void replServer(LiveEngine liveEngine) {
                     // String commandArg = parts[1].toLowerCase();
                     // Commands cmdArg = Commands.fromString(commandArg);
                     REPLUtils.parseCommand(parts, cmdObject);
-                    // userInputIndex = cmdObject.commandLineIndex;
-                    // if(cmdObject.errorFlag){
-                    //     REPLUtils.errorLog(line, cmdObject.errorMessage);
-                    //     break;
-                    // }
-                    // System.out.println(cmdObject.command);
-                    // System.out.println(cmdObject.commandLineIndex);
                     
 
                     // databse as secondary command,
@@ -147,21 +140,13 @@ private static void replServer(LiveEngine liveEngine) {
                         // send to create database query engine
                         QueryEngine.createDatabase(parts,cmdObject, liveEngine);
                         
-                        // userInputIndex++;
-                        //String databaseName = parts[2].toLowerCase();
-                        // REPLUtils.parseCommandArguments(parts, cmdObject);
-                        // userInputIndex = cmdObject.commandLineIndex;
-                        // if(cmdObject.errorFlag){
-                        //     REPLUtils.errorLog(line, cmdObject.errorMessage);
-                        //     break;
-                        // }
-                        
                         // System.out.println(cmdObject.stringContent);
-
                     }
                     else if(cmdObject.command == Commands.TABLE){
                         // userInputIndex++;
                         System.out.println("create table command issued...\n\n" + parts);
+
+                        QueryEngine.createTable(parts, cmdObject, liveEngine); // handle create table query
 
                     }
 
@@ -195,6 +180,7 @@ private static void replServer(LiveEngine liveEngine) {
 
         // catch any thrown errors
         } catch (ParserException  e) {
+            System.out.println("Caught an error!");
             REPLUtils.errorLog(line,e.getMessage());
             //System.out.println("Error: " + e.getMessage());
         }
